@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NZ Curriculum Algebra Diagnostic Assessment</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #2563eb;
+      --accent: #d97706;
+      --light: #f8fafc;
+      --dark: #0f172a;
+      --border: #cbd5e1;
+      --p3-color: #0d9488;
+      --p4-color: #ea580c;
+      --p5-color: #7c3aed;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f5f9;
+      color: var(--dark);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .progress-container {
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background-color: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--secondary);
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      text-align: right;
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 5px;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    h1 {
+      color: var(--primary);
+      border-bottom: 3px solid var(--secondary);
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+    .phase-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .badge-p3 { background-color: var(--p3-color); }
+    .badge-p4 { background-color: var(--p4-color); }
+    .badge-p5 { background-color: var(--p5-color); }
+    
+    .question-card {
+      background: var(--light);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 25px;
+    }
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .diagram {
+      text-align: center;
+      margin: 15px 0;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 15px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .option-label:hover {
+      background: #eff6ff;
+      border-color: var(--secondary);
+    }
+    .option-label input {
+      margin-right: 14px;
+      width: 20px;
+      height: 20px;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    button {
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-next, .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      margin-left: auto;
+    }
+    .btn-next:hover, .btn-submit:hover {
+      background-color: #1e1b4b;
+    }
+    .btn-prev {
+      background-color: #64748b;
+      color: white;
+    }
+    .btn-prev:hover {
+      background-color: #475569;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .error-msg {
+      color: #dc2626;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+    .standing-box {
+      background: white;
+      padding: 24px;
+      border-left: 6px solid var(--primary);
+      margin: 20px 0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .admin-link {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="progress-container" id="progressBox" style="display: none;">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">Question 1 of 36</div>
+  </div>
+
+  <!-- PAGE 0: STUDENT DETAILS -->
+  <div class="page active" id="page0">
+    <h1>NZ Curriculum Algebra Assessment</h1>
+    <p style="font-size: 1.1rem; color: #475569;">Diagnostic Assessment for Year 7 & Year 8 (Phases 3 – 5)</p>
+    <div class="question-card">
+      <div class="form-group">
+        <label for="studentName">Student Full Name:</label>
+        <input type="text" id="studentName" placeholder="Type your full name here..." required>
+      </div>
+      <div class="form-group">
+        <label for="studentYear">Year Level:</label>
+        <input type="text" id="studentYear" placeholder="Type your year level (e.g. Year 7 or Year 8)..." required>
+      </div>
+      <p class="error-msg" id="startError">Please enter both your full name and year level to begin.</p>
+    </div>
+    <button class="btn-next" onclick="startAssessment()">Start Assessment &rarr;</button>
+  </div>
+
+  <!-- QUESTIONS CONTAINER -->
+  <div id="questionsContainer"></div>
+
+  <!-- RESULTS PAGE -->
+  <div class="page" id="pageResults">
+    <h1>Ngā Mihi! Assessment Completed</h1>
+    <p>Your responses have been saved into your teacher's database.</p>
+    
+    <div class="standing-box">
+      <h3 style="margin-top:0; color:var(--primary);" id="resStandingTitle">Curriculum Diagnostic Standing</h3>
+      <p id="resStanding" style="font-size:1.15rem; font-weight:bold; color: var(--primary);"></p>
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+      <p><strong>Phase 3 Score (Foundations):</strong> <span id="resP3"></span> / 20</p>
+      <p><strong>Phase 4 Score (Linear & Brackets):</strong> <span id="resP4"></span> / 8</p>
+      <p><strong>Phase 5 Score (Multi-step & Quadratics):</strong> <span id="resP5"></span> / 8</p>
+      <p><strong>Total Score:</strong> <span id="resTotal"></span> / 36</p>
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+      <h4>Strengths & Learning Needs Diagnostic Analysis:</h4>
+      <p id="resDiagnostic" style="line-height: 1.7; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0;"></p>
+    </div>
+
+    <div class="admin-link">
+      <p>Teacher Access: <a id="csvLink" href="#" target="_blank">Download Class Results CSV (PIN 1335)</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // GOOGLE APPS SCRIPT WEB APP URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDiGbSazlAAjkpA0vQ1V4-MbW9FALCjFwRYyA8-paf43E3FYIPsxF8vGQ8-BJ9ZdNfFg/exec";
+
+  document.getElementById('csvLink').href = SCRIPT_URL + "?pin=1335";
+
+  // SVG Helper Functions for Diagrams
+  function makeBalanceSvg(leftBoxText, leftDots, rightDots) {
+    return `
+      <svg width="280" height="110" viewBox="0 0 280 110">
+        <!-- Scale Base -->
+        <path d="M140 70 L110 100 L170 100 Z" fill="#64748b" />
+        <rect x="20" y="65" width="240" height="8" rx="4" fill="#334155" />
+        <!-- Left Pan -->
+        <line x1="60" y1="65" x2="60" y2="45" stroke="#475569" stroke-width="3"/>
+        <rect x="25" y="45" width="70" height="6" fill="#0284c7" />
+        <!-- Right Pan -->
+        <line x1="220" y1="65" x2="220" y2="45" stroke="#475569" stroke-width="3"/>
+        <rect x="185" y="45" width="70" height="6" fill="#0284c7" />
+        <!-- Left Items -->
+        <rect x="30" y="20" width="22" height="22" fill="#0d9488" rx="3"/>
+        <text x="41" y="35" fill="white" font-weight="bold" font-size="12" text-anchor="middle">${leftBoxText}</text>
+        <circle cx="68" cy="31" r="7" fill="#ea580c"/>
+        <text x="68" y="35" fill="white" font-weight="bold" font-size="10" text-anchor="middle">${leftDots}</text>
+        <!-- Right Items -->
+        <rect x="195" y="20" width="50" height="22" fill="#ea580c" rx="4"/>
+        <text x="220" y="35" fill="white" font-weight="bold" font-size="12" text-anchor="middle">${rightDots} units</text>
+      </svg>
+    `;
+  }
+
+  function makeFunctionTableSvg(in1, out1, in2, out2, in3, out3) {
+    return `
+      <svg width="220" height="110" viewBox="0 0 220 110">
+        <rect x="10" y="10" width="200" height="90" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" rx="6"/>
+        <line x1="110" y1="10" x2="110" y2="100" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="10" y1="35" x2="210" y2="35" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="60" y="28" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Input (x)</text>
+        <text x="160" y="28" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Output (y)</text>
+        <text x="60" y="55" fill="#334155" text-anchor="middle">${in1}</text>
+        <text x="160" y="55" fill="#334155" text-anchor="middle">${out1}</text>
+        <text x="60" y="75" fill="#334155" text-anchor="middle">${in2}</text>
+        <text x="160" y="75" fill="#334155" text-anchor="middle">${out2}</text>
+        <text x="60" y="95" fill="#334155" text-anchor="middle">${in3}</text>
+        <text x="160" y="95" fill="#334155" text-anchor="middle">${out3}</text>
+      </svg>
+    `;
+  }
+
+  // 36 Algebra Questions (20 Phase 3, 8 Phase 4, 8 Phase 5)
+  // Answer positions randomized across A, B, C, D
+  const questions = [
+    // PHASE 3 (Questions 1 - 20)
+    { id: 1, phase: 3, title: "1. Phase 3: Visual Balance Scale", text: "Look at the balanced scale below. What is the value of <strong>x</strong>?", svg: makeBalanceSvg("x", "4", "10"), options: ["A) x = 4", "B) x = 6", "C) x = 14", "D) x = 10"], key: "B" },
+    { id: 2, phase: 3, title: "2. Phase 3: Number Pattern Sequences", text: "Find the next number in this sequence: <strong>3, 6, 9, 12, ___</strong>", options: ["A) 13", "B) 14", "C) 15", "D) 16"], key: "C" },
+    { id: 3, phase: 3, title: "3. Phase 3: Missing Number Equations", text: "Solve for <strong>a</strong>: <br><strong>a - 7 = 8</strong>", options: ["A) a = 1", "B) a = 14", "C) a = 56", "D) a = 15"], key: "D" },
+    { id: 4, phase: 3, title: "4. Phase 3: Function Rule Evaluation", text: "A rule says: <em>'Multiply the input number by 2, then add 1'</em>. What is the output if the input is <strong>5</strong>?", options: ["A) 11", "B) 10", "C) 12", "D) 7"], key: "A" },
+    { id: 5, phase: 3, title: "5. Phase 3: Algebraic Expressions", text: "Which mathematical expression represents: <em>'4 more than n'</em>?", options: ["A) 4n", "B) n + 4", "C) n - 4", "D) n / 4"], key: "B" },
+    { id: 6, phase: 3, title: "6. Phase 3: Simple Multiplication Equation", text: "Solve for <strong>y</strong>: <br><strong>4y = 24</strong>", options: ["A) y = 20", "B) y = 28", "C) y = 6", "D) y = 8"], key: "C" },
+    { id: 7, phase: 3, title: "7. Phase 3: Term-to-Term Rule", text: "What is the rule to get the next term in this pattern? <br><strong>2, 5, 8, 11, 14...</strong>", options: ["A) Add 3 each time", "B) Add 2 each time", "C) Multiply by 2", "D) Add 4 each time"], key: "A" },
+    { id: 8, phase: 3, title: "8. Phase 3: Visual Tile Model", text: "Two equal boxes plus 3 extra tiles equal 11 tiles in total (2b + 3 = 11). How many tiles are in <strong>one box (b)</strong>?", options: ["A) 8 tiles", "B) 3 tiles", "C) 5 tiles", "D) 4 tiles"], key: "D" },
+    { id: 9, phase: 3, title: "9. Phase 3: Substitution into Addition", text: "If <strong>p = 7</strong>, what is the value of <strong>p + 9</strong>?", options: ["A) 15", "B) 16", "C) 63", "D) 2"], key: "B" },
+    { id: 10, phase: 3, title: "10. Phase 3: Function Table Analysis", text: "Look at the input/output table below. What rule connects <strong>Input (x)</strong> to <strong>Output (y)</strong>?", svg: makeFunctionTableSvg("1", "4", "2", "7", "3", "10"), options: ["A) Add 3 to x", "B) Multiply x by 4", "C) Multiply x by 3, then add 1", "D) Double x, then add 2"], key: "C" },
+    { id: 11, phase: 3, title: "11. Phase 3: Division Equations", text: "Solve for <strong>x</strong>: <br><strong>x / 3 = 5</strong>", options: ["A) x = 15", "B) x = 8", "C) x = 2", "D) x = 1.6"], key: "A" },
+    { id: 12, phase: 3, title: "12. Phase 3: Writing Products as Expressions", text: "How do you write <em>'double k'</em> in algebra?", options: ["A) k + 2", "B) k / 2", "C) k²", "D) 2k"], key: "D" },
+    { id: 13, phase: 3, title: "13. Phase 3: Decreasing Sequences", text: "Find the missing term in this decreasing sequence: <br><strong>20, 16, 12, 8, ___</strong>", options: ["A) 6", "B) 2", "C) 4", "D) 0"], key: "C" },
+    { id: 14, phase: 3, title: "14. Phase 3: Subtraction Equation", text: "Solve for <strong>m</strong>: <br><strong>15 - m = 9</strong>", options: ["A) m = 24", "B) m = 6", "C) m = 5", "D) m = 7"], key: "B" },
+    { id: 15, phase: 3, title: "15. Phase 3: Simple Product Evaluation", text: "Evaluate <strong>3n</strong> when <strong>n = 8</strong>:", options: ["A) 24", "B) 38", "C) 11", "D) 21"], key: "A" },
+    { id: 16, phase: 3, title: "16. Phase 3: Equal Groups Balance", text: "Look at the scale below: Two identical boxes equal 10 units. What is the value of <strong>one box (x)</strong>?", svg: makeBalanceSvg("2x", "0", "10"), options: ["A) x = 2", "B) x = 8", "C) x = 20", "D) x = 5"], key: "D" },
+    { id: 17, phase: 3, title: "17. Phase 3: Expression Translation", text: "Which expression represents <em>'5 less than b'</em>?", options: ["A) 5 - b", "B) 5b", "C) b - 5", "D) b / 5"], key: "C" },
+    { id: 18, phase: 3, title: "18. Phase 3: Inverse Operations", text: "A number machine takes <strong>x</strong>, adds 6, and gives an output of <strong>20</strong>. What was the input number <strong>x</strong>?", options: ["A) 14", "B) 26", "C) 120", "D) 12"], key: "A" },
+    { id: 19, phase: 3, title: "19. Phase 3: Geometric Pattern Count", text: "A matchstick pattern uses <strong>3, 5, 7, 9</strong> matches. How many matches will be in the <strong>5th shape</strong>?", options: ["A) 10", "B) 11", "C) 12", "D) 13"], key: "B" },
+    { id: 20, phase: 3, title: "20. Phase 3: Two-Digit Addition Equation", text: "Solve for <strong>w</strong>: <br><strong>w + 12 = 30</strong>", options: ["A) w = 42", "B) w = 22", "C) w = 18", "D) w = 15"], key: "C" },
+
+    // PHASE 4 (Questions 21 - 28)
+    { id: 21, phase: 4, title: "21. Phase 4: Two-Step Linear Equation", text: "Solve for <strong>x</strong>: <br><strong>2x + 5 = 17</strong>", options: ["A) x = 6", "B) x = 11", "C) x = 8.5", "D) x = 7"], key: "A" },
+    { id: 22, phase: 4, title: "22. Phase 4: Combining Like Terms", text: "Simplify the expression: <br><strong>3a + 4b + 2a - b</strong>", options: ["A) 5a + 5b", "B) 5a + 3b", "C) 8ab", "D) 6a + 3b"], key: "B" },
+    { id: 23, phase: 4, title: "23. Phase 4: Expanding Single Brackets", text: "Expand the bracket: <br><strong>4(x + 3)</strong>", options: ["A) 4x + 3", "B) x + 12", "C) 4x + 12", "D) 7x"], key: "C" },
+    { id: 24, phase: 4, title: "24. Phase 4: Linear Equation from Table", text: "In a table: x=1 gives y=5; x=2 gives y=8; x=3 gives y=11. What is the linear equation relating x and y?", options: ["A) y = x + 4", "B) y = 5x", "C) y = 2x + 3", "D) y = 3x + 2"], key: "D" },
+    { id: 25, phase: 4, title: "25. Phase 4: Solving Brackets Equation", text: "Solve for <strong>m</strong>: <br><strong>3(m - 2) = 15</strong>", options: ["A) m = 7", "B) m = 5", "C) m = 9", "D) m = 3"], key: "A" },
+    { id: 26, phase: 4, title: "26. Phase 4: Integer Substitution", text: "Evaluate <strong>2x + y</strong> when <strong>x = 4</strong> and <strong>y = -2</strong>:", options: ["A) 10", "B) 6", "C) -4", "D) 8"], key: "B" },
+    { id: 27, phase: 4, title: "27. Phase 4: Two-Step Subtraction Equation", text: "Solve for <strong>p</strong>: <br><strong>4p - 7 = 13</strong>", options: ["A) p = 4.5", "B) p = 6", "C) p = 5", "D) p = 8"], key: "C" },
+    { id: 28, phase: 4, title: "28. Phase 4: Bracket Expansion with Terms", text: "Expand the expression: <br><strong>5(2a - 3)</strong>", options: ["A) 10a - 3", "B) 7a - 15", "C) 10a - 8", "D) 10a - 15"], key: "D" },
+
+    // PHASE 5 (Questions 29 - 36)
+    { id: 29, phase: 5, title: "29. Phase 5: Unknowns on Both Sides", text: "Solve for <strong>x</strong>: <br><strong>5x - 4 = 2x + 11</strong>", options: ["A) x = 5", "B) x = 3", "C) x = 7", "D) x = 2.33"], key: "A" },
+    { id: 30, phase: 5, title: "30. Phase 5: Expand & Simplify Brackets", text: "Expand and fully simplify: <br><strong>2(x + 4) + 3(x - 1)</strong>", options: ["A) 5x + 11", "B) 5x + 5", "C) 5x + 7", "D) 6x + 5"], key: "B" },
+    { id: 31, phase: 5, title: "31. Phase 5: Factorising Expressions", text: "Factorise completely: <br><strong>8x + 12</strong>", options: ["A) 2(4x + 6)", "B) 8(x + 12)", "C) 4(2x + 3)", "D) 4x(2 + 3)"], key: "C" },
+    { id: 32, phase: 5, title: "32. Phase 5: Gradient of a Line", text: "What is the gradient (m) of the linear equation <strong>y = 4x - 3</strong>?", options: ["A) -3", "B) 3", "C) -4", "D) 4"], key: "D" },
+    { id: 33, phase: 5, title: "33. Phase 5: Multi-Step Bracket Equation", text: "Solve for <strong>x</strong>: <br><strong>3(2x + 1) = 4(x + 5)</strong>", options: ["A) x = 8.5", "B) x = 11.5", "C) x = 6", "D) x = 7.5"], key: "A" },
+    { id: 34, phase: 5, title: "34. Phase 5: Algebraic Factorisation", text: "Factorise completely: <br><strong>x² + 5x</strong>", options: ["A) 5(x + 1)", "B) x(x + 5)", "C) x²(1 + 5)", "D) 2x + 5"], key: "B" },
+    { id: 35, phase: 5, title: "35. Phase 5: Quadratic Sequence Rule", text: "What is the n-th term rule for the sequence: <br><strong>1, 4, 9, 16, 25...</strong>?", options: ["A) 2n + 1", "B) 3n - 2", "C) n²", "D) 2ⁿ"], key: "C" },
+    { id: 36, phase: 5, title: "36. Phase 5: Rearranging Formulae", text: "Rearrange the formula <strong>V = IR</strong> to make <strong>I</strong> the subject:", options: ["A) I = V - R", "B) I = VR", "C) I = R / V", "D) I = V / R"], key: "D" }
+  ];
+
+  let currentPage = 0;
+  const userAnswers = {};
+
+  // Build Quiz Pages dynamically
+  const container = document.getElementById('questionsContainer');
+  questions.forEach((q, idx) => {
+    const pageNum = idx + 1;
+    const badgeClass = q.phase === 3 ? "badge-p3" : q.phase === 4 ? "badge-p4" : "badge-p5";
+    
+    let html = `
+      <div class="page" id="page${pageNum}">
+        <span class="phase-badge ${badgeClass}">Phase ${q.phase} Question</span>
+        <div class="question-card">
+          <div class="question-title">${q.title}</div>
+          <p style="font-size: 1.1rem;">${q.text}</p>
+          ${q.svg ? `<div class="diagram">${q.svg}</div>` : ''}
+          <div class="options">
+            ${q.options.map(opt => {
+              const val = opt.charAt(0);
+              return `
+                <label class="option-label">
+                  <input type="radio" name="q${q.id}" value="${val}" onchange="selectOption(${q.id}, '${val}')">
+                  ${opt}
+                </label>
+              `;
+            }).join('')}
+          </div>
+          <p class="error-msg" id="err${q.id}">Please select an answer before continuing.</p>
+        </div>
+        <div class="nav-buttons">
+          ${pageNum > 1 ? `<button class="btn-prev" onclick="navigate(-1)">&larr; Previous</button>` : '<div></div>'}
+          ${pageNum < 36 
+            ? `<button class="btn-next" onclick="navigate(1)">Next Question &rarr;</button>` 
+            : `<button class="btn-submit" onclick="submitAssessment()">Submit Assessment &check;</button>`}
+        </div>
+      </div>
+    `;
+    container.innerHTML += html;
+  });
+
+  function startAssessment() {
+    const name = document.getElementById('studentName').value.trim();
+    const year = document.getElementById('studentYear').value.trim();
+    if (!name || !year) {
+      document.getElementById('startError').style.display = 'block';
+      return;
+    }
+    document.getElementById('startError').style.display = 'none';
+    document.getElementById('progressBox').style.display = 'block';
+    showPage(1);
+  }
+
+  function showPage(p) {
+    document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+    
+    if (p === 'Results') {
+      document.getElementById('pageResults').classList.add('active');
+      return;
+    }
+
+    const target = document.getElementById(`page${p}`);
+    if (target) {
+      target.classList.add('active');
+      currentPage = p;
+
+      if (p >= 1 && p <= 36) {
+        const pct = Math.round((p / 36) * 100);
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressText').innerText = `Question ${p} of 36 (${pct}%)`;
+      }
+    }
+  }
+
+  function selectOption(qId, val) {
+    userAnswers[qId] = val;
+    const errEl = document.getElementById(`err${qId}`);
+    if (errEl) errEl.style.display = 'none';
+  }
+
+  function navigate(dir) {
+    if (dir === 1) {
+      const currentQ = questions[currentPage - 1];
+      if (!userAnswers[currentQ.id]) {
+        document.getElementById(`err${currentQ.id}`).style.display = 'block';
+        return;
+      }
+    }
+    showPage(currentPage + dir);
+  }
+
+  function submitAssessment() {
+    const lastQ = questions[35];
+    if (!userAnswers[lastQ.id]) {
+      document.getElementById(`err${lastQ.id}`).style.display = 'block';
+      return;
+    }
+
+    let scoreP3 = 0, scoreP4 = 0, scoreP5 = 0;
+    questions.forEach(q => {
+      if (userAnswers[q.id] === q.key) {
+        if (q.phase === 3) scoreP3++;
+        else if (q.phase === 4) scoreP4++;
+        else if (q.phase === 5) scoreP5++;
+      }
+    });
+
+    const totalScore = scoreP3 + scoreP4 + scoreP5;
+    const studentName = document.getElementById('studentName').value.trim();
+    const studentYear = document.getElementById('studentYear').value.trim();
+
+    // NZ Curriculum Algebra Diagnostic Analysis (Years 7 & 8 Framework)
+    let standing = "";
+    let diagnosticText = "";
+
+    if (scoreP3 >= 17 && scoreP4 >= 6) {
+      standing = "Phase 4 Proficient / Phase 5 Extending (Exceeding Year 7/8 Expectation)";
+      diagnosticText = `Kia ora ${studentName}! You demonstrate strong algebraic fluency. You have full mastery over Phase 3 relational thinking (balance scale equality, pattern rules, and single-step equations) and are working comfortably in Phase 4 (2-step equations, collecting like terms, expanding single brackets) and Phase 5 extension. Next steps: Practice factorising quadratics and solving equations with variables on both sides.`;
+    } else if (scoreP3 >= 15) {
+      standing = "Phase 3 Secure / Transitioning to Phase 4 (At Standard for Year 7/8)";
+      diagnosticText = `Kia ora ${studentName}! You are secure in Phase 3 Algebra benchmark expectations for Year 7 & 8. You understand operational equality, input/output function machines, and term-to-term rules. Your main growth area is moving into Phase 4: working with two-step linear equations (e.g., 2x + 5 = 17) and expanding brackets.`;
+    } else if (scoreP3 >= 10) {
+      standing = "Phase 3 Developing Learner (Developing Year 7/8 Standard)";
+      diagnosticText = `Kia ora ${studentName}! You show promising foundational skills as a Phase 3 algebra student. You can evaluate simple pattern rules and basic missing numbers. Your key learning priority is treating the equals sign as a balance (= means 'same value as', not just 'calculate answer') and building confidence with division and subtraction equations.`;
+    } else {
+      standing = "Phase 3 Early Progress (Requires Structured Visual Support)";
+      diagnosticText = `Kia ora ${studentName}! You are in the early stages of Phase 3 algebra. Focus on using physical equipment, balance scale visual models, and matchstick patterns to build an understanding of how letters (variables) represent unknown numbers in patterns and basic equations.`;
+    }
+
+    document.getElementById('progressBox').style.display = 'none';
+    document.getElementById('resStanding').innerText = standing;
+    document.getElementById('resP3').innerText = scoreP3;
+    document.getElementById('resP4').innerText = scoreP4;
+    document.getElementById('resP5').innerText = scoreP5;
+    document.getElementById('resTotal').innerText = totalScore;
+    document.getElementById('resDiagnostic').innerText = diagnosticText;
+
+    showPage('Results');
+
+    // Data Transmission to Google Sheet
+    const payload = {
+      studentName: studentName,
+      studentYear: studentYear,
+      totalScore: totalScore,
+      scoreP3: scoreP3,
+      scoreP4: scoreP4,
+      scoreP5: scoreP5,
+      standing: standing,
+      diagnosticText: diagnosticText
+    };
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => {
+      console.log("Transmission completed.");
+    });
+  }
+</script>
+
+</body>
+</html>
